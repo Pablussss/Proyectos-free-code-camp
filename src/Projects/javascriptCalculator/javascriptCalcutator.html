@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/styles.css">
+
+    <title>JavaScript Calculator</title>
+    <script src="https://releases.jquery.com/git/jquery-git.min.js"></script>
+    <script>
+
+        let keys = document.querySelectorAll("#container span");
+        let operators = ["+", "-", "*", "/"]
+        let decimalAdded = false;
+
+        for(let i=0;i<keys.length;i++){
+            keys[i].onclick = function(e){
+                let input = document.querySelector('.dis');
+                let inputVal = input.innerHTML;
+                let btnVal = this.innerHTML;
+
+                if (btnVal == 'C') {
+                    input.innerHTML = 0;
+                    decimalAdded = false;
+                }
+                else if(btnVal == '='){
+                    let equation = inputVal;
+                    let lastEq = equation[equation.length - 1];
+
+                    if (operators.indexOf(lastEq) > 1 || lastEq == '.'){
+                        equation = equation.replace(/.$/, '');
+
+                    }
+
+                    if (equation){
+                        input.innerHTML = eval(equation);
+                    }
+
+                    decimalAdded = false;
+                }
+                else if(operators.indexOf(btnVal) > -1) {
+                    let lastChar = inputVal[inputVal.length - 1]
+                    if (inputVal != '' && operators.indexOf(last) == -1) {
+                        input.innerHTML +=btnVal;
+                    }
+                    else if (inputVal === '' && btnVal === "-") {
+                        input.innerHTML +=btnVal;
+                    }
+                }
+            }
+        }
+    </script>
+  </head>
+  <body>
+    <div class="title-center">
+        <h1>Javascript Calculator</h1>
+        <h2>By PaulDev</h2>
+    </div>
+    <div class="container" id="container">
+        <div class="grid" id="calculator">
+            <a class="dis" id="display">0</a>
+            <a class="padButton clear red" id="clear">AC</a>
+            <a class="padButton div gray" id="divide">/</a>
+            <a class="padButton times gray" id="multiply">*</a>
+            <a class="padButton seven" id="seven">7</a>
+            <a class="padButton eight" id="eight">8</a>
+            <a class="padButton nine" id="nine">9</a>
+            <a class="padButton minus gray" id="subtract">-</a>
+            <a class="padButton four" id="four">4</a>
+            <a class="padButton five" id="five">5</a>
+            <a class="padButton six" id="six">6</a>
+            <a class="padButton plus gray" id="add">+</a>
+            <a class="padButton one" id="one">1</a>
+            <a class="padButton two" id="two">2</a>
+            <a class="padButton three" id="three">3</a>
+            <a class="padButton equal blue" id="equals">=</a>
+            <a class="padButton zero" id="zero">0</a>
+            <a class="padButton dot" id="decimal">.</a>
+            <br/>
+        </div>
+    </div>
+
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+    
+  </body>
+</html>

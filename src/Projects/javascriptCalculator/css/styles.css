@@ -1,0 +1,72 @@
+.title-center {
+    text-align: center;
+    font-size: 26px;
+    font-family:  "Roboto", "Arial";
+}
+
+.container {
+    padding-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+    "dis dis dis dis"
+    "clear clear div times"
+    "seven eight nine minus"
+    "four five three plus"
+    "one two three equal"
+    "zero zero dot equal"
+    ;
+}
+
+.padButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #333;
+    color: white;
+    border: 1px solid black;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.dis {
+
+    padding: 10px 20px 10px 10px;
+    grid-area: dis;
+    background-color: black;
+    color: white;
+    text-align: right;
+    font-size: 30px;
+}
+
+.zero {
+    grid-area: zero;
+}
+
+.equal {
+    grid-area: equal;
+}
+
+.clear {
+    grid-area: clear;
+}
+
+.red {
+    background-color: #FF2D2D;
+}
+
+.blue {
+    background-color: #2D9CFF
+}
+
+.gray {
+    background-color: gray;
+}

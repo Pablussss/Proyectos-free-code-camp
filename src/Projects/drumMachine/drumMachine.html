@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="./css/styles.css">
+
+    <title>Drum Machine</title>
+    <script>
+    const KEYS = {
+        Q:{
+            key: "Q",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/Boy%20In%20A%20Band%20Electro%20Kit/72[kb]biab_electro_kick_9.wav.mp3",
+            description: "Kick 1"
+        },W:{
+            key: "W",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/Boy%20In%20A%20Band%20Electro%20Kit/61[kb]biab_electro_kick_5.wav.mp3",
+            description: "Kick 2"
+        },E:{
+            key: "E",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/Boy%20In%20A%20Band%20Electro%20Kit/63[kb]biab_electro_kick_7.wav.mp3",
+            description: "Kick 3"
+        },A:{
+            key: "A",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/Boy%20In%20A%20Band%20Electro%20Kit/33[kb]biab_electro_clap_1.wav.mp3",
+            description: "Clap 1"
+        },S:{
+            key: "S",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/Boy%20In%20A%20Band%20Electro%20Kit/61[kb]biab_electro_clap_2.wav.mp3",
+            description: "Clap 2"
+        },D:{
+            key: "D",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/Boy%20In%20A%20Band%20Electro%20Kit/61[kb]biab_electro_clap_4.wav.mp3",
+            description: "Clap 3"
+        },Z:{
+            key: "Z",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/Moombah%20Kit/63[kb]Moombah-Vocal-2.wav.mp3",
+            description: "Vocal 1"
+        },X:{
+            key: "X",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/Moombah%20Kit/93[kb]Moombah-Vocal-1.wav.mp3",
+            description: "Vocal 2"
+        },C:{
+            key: "C",
+            sound: "https://sampleswap.org/samples-ghost/DRUMS%20(FULL%20KITS)/STYLE%20KITS%20(Hip%20Hop,%20Etc)/DJ%20Mustard%20Hip%20Hop%20Kit/639[kb]dj-mustard-Kick-1.wav.mp3",
+            description: "Vocal 3"
+        }
+
+    }
+
+    // Cambiar descripcion
+    function description (id) {
+        let description = KEYS[id].description;
+        let text = document.getElementById("description");
+        text.innerHTML = "Current sound: " + description;
+    } 
+    // funcion para cambiar el sonido
+    function selectSound(id) {
+        let src = KEYS[id].sound;
+        return src;
+    }
+    // funcion para reproducir el sonido
+    function play(key) {
+        let audio = document.getElementById(key);
+        audio.src = selectSound(key);
+        description(key);
+        audio.play();
+    }
+    // teclado funcional
+    window.document.onkeyup = function(event) {
+        let keyPush = event.key.toUpperCase();
+        if (keyPush === KEYS[keyPush].key){
+            play(keyPush);
+        }
+    }
+    
+    </script>
+  </head>
+  <body>
+    <div id="drum-machine" class="container">
+        <div id="display" class="display">
+            <h1 id="description">No Sound</h1>
+            <button class="drum-pad" id="drum-1" onclick="play('Q')">
+                Q
+                <audio src="" class="clip" id="Q">
+            </button>
+            <button class="drum-pad" id="drum-2" onclick="play('W')">
+                W
+                <audio src="" class="clip" id="W">
+            </button>
+            <button class="drum-pad" id="drum-3" onclick="play('E')">
+                E
+                <audio src="" class="clip" id="E">
+            </button>
+            <button class="drum-pad" id="drum-4" onclick="play('A')">
+                A
+                <audio src="" class="clip" id="A">
+            </button>
+            <button class="drum-pad" id="drum-5" onclick="play('S')">
+                S
+                <audio src="" class="clip" id="S">
+            </button>
+            <button class="drum-pad" id="drum-6" onclick="play('D')">
+                D
+                <audio src="" class="clip" id="D">
+            </button>
+            <button class="drum-pad" id="drum-7" onclick="play('Z')">
+                Z
+                <audio src="" class="clip" id="Z">
+            </button>
+            <button class="drum-pad" id="drum-8" onclick="play('X')">
+                X
+                <audio src="" class="clip" id="X">
+            </button>
+            <button class="drum-pad" id="drum-9" onclick="play('C')">
+                C
+                <audio src="" class="clip" id="C">
+            </button>
+        </button>  
+    </button>
+
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+
+  </body>
+</html>
