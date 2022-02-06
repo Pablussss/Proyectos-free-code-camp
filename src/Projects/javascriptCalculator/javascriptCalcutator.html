@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
+    
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,50 +9,7 @@
     <link rel="stylesheet" href="css/styles.css">
 
     <title>JavaScript Calculator</title>
-    <script src="https://releases.jquery.com/git/jquery-git.min.js"></script>
-    <script>
-
-        let keys = document.querySelectorAll("#container span");
-        let operators = ["+", "-", "*", "/"]
-        let decimalAdded = false;
-
-        for(let i=0;i<keys.length;i++){
-            keys[i].onclick = function(e){
-                let input = document.querySelector('.dis');
-                let inputVal = input.innerHTML;
-                let btnVal = this.innerHTML;
-
-                if (btnVal == 'C') {
-                    input.innerHTML = 0;
-                    decimalAdded = false;
-                }
-                else if(btnVal == '='){
-                    let equation = inputVal;
-                    let lastEq = equation[equation.length - 1];
-
-                    if (operators.indexOf(lastEq) > 1 || lastEq == '.'){
-                        equation = equation.replace(/.$/, '');
-
-                    }
-
-                    if (equation){
-                        input.innerHTML = eval(equation);
-                    }
-
-                    decimalAdded = false;
-                }
-                else if(operators.indexOf(btnVal) > -1) {
-                    let lastChar = inputVal[inputVal.length - 1]
-                    if (inputVal != '' && operators.indexOf(last) == -1) {
-                        input.innerHTML +=btnVal;
-                    }
-                    else if (inputVal === '' && btnVal === "-") {
-                        input.innerHTML +=btnVal;
-                    }
-                }
-            }
-        }
-    </script>
+     
   </head>
   <body>
     <div class="title-center">
@@ -81,6 +39,7 @@
             <br/>
         </div>
     </div>
+    <script type="text/javascript" src="js/App.js"></script>
 
     <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
     
