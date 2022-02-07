@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>25 + 5 Clock</title>
+        <link rel='stylesheet' href= 'css/styles.css'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script type='text/javascript' src='js/App.js'></script>
+    </head>
+    <body>
+        <section id='header'>
+            <h1 id='header-text'>25 + 5 Clock</h1>
+        </section>
+        <article id='info'>
+            <div id='break-controls'>
+                <h2 id='break-label'>Break Length</h2>
+                <div id='element1'>
+                    <button type='button' id='break-increment'><i class='fas fa-angle-up'></i></button>
+                    <span id='break-length'></span>
+                    <button type='button' id='break-decrement'><i class='fas fa-angle-down'></i></button>
+                </div>
+            </div>
+            <div id='session-controls'>
+                <h2 id='session-label'>Session Length</h2>
+                <div id='element2'>
+                    <button type='button' id='session-increment'><i class='fas fa-angle-up'></i></button>
+                    <span id='session-length'></span>
+                    <button type='button' id='session-decrement'><i class='fas fa-angle-down'></i></button>
+                </div>
+            </div>
+        </article>
+        <article id='display'>
+            <h2 id='timer-label'>Session</h2>
+            <div id='time-left'></div>
+            <div id='btn-div'>
+                <button type='button' id='start_stop'><i class='fas fa-play-circle' aria-hidder='true'></i></button>
+                <button type='button' id='reset'><i class='fa fa-refresh' aria-hidder='true'></i></button>
+            </div>
+            <audio id='beep' src='https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav' muted></audio>
+        </article>
+    </body>
+</html>
