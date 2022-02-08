@@ -3,6 +3,7 @@
     <head>
         <title>25 + 5 Clock</title>
         <link rel='stylesheet' href= 'css/styles.css'>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <script type='text/javascript' src='js/App.js'></script>
@@ -16,7 +17,7 @@
                 <h2 id='break-label'>Break Length</h2>
                 <div id='element1'>
                     <button type='button' id='break-increment'><i class='fas fa-angle-up'></i></button>
-                    <span id='break-length'></span>
+                    <span id='break-length'>5</span>
                     <button type='button' id='break-decrement'><i class='fas fa-angle-down'></i></button>
                 </div>
             </div>
@@ -24,19 +25,19 @@
                 <h2 id='session-label'>Session Length</h2>
                 <div id='element2'>
                     <button type='button' id='session-increment'><i class='fas fa-angle-up'></i></button>
-                    <span id='session-length'></span>
+                    <span id='session-length'>25</span>
                     <button type='button' id='session-decrement'><i class='fas fa-angle-down'></i></button>
                 </div>
             </div>
         </article>
         <article id='display'>
             <h2 id='timer-label'>Session</h2>
-            <div id='time-left'></div>
+            <div id='time-left'>25:00</div>
             <div id='btn-div'>
                 <button type='button' id='start_stop'><i class='fas fa-play-circle' aria-hidder='true'></i></button>
                 <button type='button' id='reset'><i class='fa fa-refresh' aria-hidder='true'></i></button>
             </div>
-            <audio id='beep' src='https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav' muted></audio>
+            <audio id='beep' src='sound/beepSound.wav' muted></audio>
             <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
         </article>
     </body>
