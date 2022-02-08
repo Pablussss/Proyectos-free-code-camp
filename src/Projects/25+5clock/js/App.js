@@ -18,6 +18,7 @@ $(document).ready(function(){
         $('#break-length').text(breakLength);
         $('#session-length').text(sessionLength);
         $('#time-left').text(timeLeft)
+        $("#timer-label").html("Session")
         isPlaying = false;
         pararTemporizador();
         stopSound();
@@ -32,8 +33,17 @@ $(document).ready(function(){
         }
     })
     $('#break-increment').click(function(){
-        breakLength ++;
-        $('#break-length').text(breakLength);
+        if (breakLength < 59) {
+            breakLength ++;
+            let restante = formatoHora(breakLength, 0)
+            $('#break-length').text(breakLength);
+            $('#time-left').text(restante);
+        }
+        else if(breakLength === 59){
+            breakLength ++;
+            $('#break-length').text(breakLength);
+            $('#time-left').text("60:00");
+        }
     })
 
     // Session decrement / increment 
@@ -46,28 +56,60 @@ $(document).ready(function(){
         }
     })
     $('#session-increment').click(function(){
-        sessionLength ++;
-        let restante = formatoHora(sessionLength, 0)
-        $('#session-length').text(sessionLength);
-        $('#time-left').text(restante);
+        if (sessionLength < 59) {
+            sessionLength ++;
+            let restante = formatoHora(sessionLength, 0)
+            $('#session-length').text(sessionLength);
+            $('#time-left').text(restante);
+        }
+        else if(sessionLength === 59){
+            sessionLength ++;
+            $('#session-length').text(sessionLength);
+            $('#time-left').text("60:00");
+        }
     })
 
-    // Start / Stop session
-    
-    $('#start_stop').click(sessionStarted);
-
+    // Start / Stop session / break
+    $('#start_stop').click(function () {
+        if (breakPlaying) {
+            breakStarted ()
+        }
+        else if (!breakPlaying){
+            sessionStarted ()
+        }
+        
+    });
+    // Session
     function sessionStarted () {
         $("#timer-label").html("Session")
         tiempoTotal = calcSegundos();
+        
         if (!isPlaying) {
-            console.log("Running")
+            console.log("Session Running")
             isPlaying = true
             temporizador();
         }
         else if (isPlaying) {
-            console.log("Stopped")
+            console.log("Session Stopped")
             isPlaying = false
             pararTemporizador()
+        }
+    }
+    // Break
+    function breakStarted () {
+        breakPlaying = true;
+        $("#timer-label").html("Break")
+        tiempoTotal = calcSegundos()
+
+        if (!isPlaying){
+            console.log("Break Running")
+            isPlaying = true
+            temporizador();
+        }
+        else if (isPlaying){
+            console.log("Break Stopped")
+            isPlaying = false;
+            pararTemporizador();
         }
     }
 
@@ -83,20 +125,24 @@ $(document).ready(function(){
 
     // Temporizador y parar temporizador
     function temporizador () {
-        temporizador_1 = setInterval(actualizarContador, 100);
+        temporizador_1 = setInterval(actualizarContador, 1000);
+        isPlaying = true;
     }
     function pararTemporizador () {
         clearInterval(temporizador_1);
+        isPlaying = false;
     }
 
 
     // Actualiza el time-left
     function actualizarContador () {
         if (!breakPlaying) {
+            console.log("tiempo Session " + tiempoTotal)
             if (tiempoTotal === 0){
                 playSound()
                 pararTemporizador();
-                breakContador();
+                $("#time-left").text(formatoHora(breakLength, 0));
+                breakStarted();
             }
             else if (segundosRestantes === 0){
                 minutosRestantes --;
@@ -109,7 +155,9 @@ $(document).ready(function(){
             }
         }
         else if(breakPlaying){
+            console.log("tiempo Break " + tiempoTotal)
             if (tiempoTotal === 0){
+                playSound()
                 breakPlaying = false;
                 pararTemporizador();
                 bucleSesion()
@@ -127,10 +175,12 @@ $(document).ready(function(){
         }
 
     function bucleSesion () {
-        $('#break-length').text(breakLength);
-        $('#session-length').text(sessionLength);
-        $('#time-left').text(formatoHora(sessionLength, 0))
-        isPlaying = false;
+        if (!breakPlaying){
+            $('#time-left').text(formatoHora(sessionLength, 0))
+        }
+        else if(breakPlaying){
+            $('#time-left').text(formatoHora(breakLength, 0))
+        }
     }
        
     }
@@ -141,16 +191,6 @@ $(document).ready(function(){
         $('#time-left').text(restante);
     }
 
-    function breakContador () {
-        $("#timer-label").html("Break")
-        let restante = formatoHora(breakLength, 0)
-        $("#time-left").text(restante);
-        console.log("Break Running")
-        breakPlaying = true;
-        tiempoTotal = calcSegundos()
-        temporizador();     
-    }
-
     function formatoHora (m, s) {
         let hora = m + ":" + s;
         let restante = moment(hora, "mm:ss")
@@ -159,13 +199,15 @@ $(document).ready(function(){
     }
 
     function playSound (){
-        const sound = new Audio($("#beep"));
-        sound.play()
+        let clip = document.getElementById("beep")
+        clip.play();
+        clip.muted = false;
     }
 
     function stopSound () {
-        $("beep").stop();
+        let clip = document.getElementById("beep")
+        clip.pause();
+        clip.currentTime = 0;
     }
-
-        
+       
 })
