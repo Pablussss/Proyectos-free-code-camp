@@ -79,12 +79,16 @@ let drawBars =() => {
         .attr('y', (item) => {
             return (height - padding) - heightScale(item[1])
         })
+
         .on('mouseover', (item) => {
+
             tooltip.transition()
                 .style('visibility', 'visible')
-
-            tooltip.text(item[0])
-            document.querySelector('#tooltip').setAttribute('data-date', item[0])
+            
+            let item2 = item.fromElement
+            let dataDate = item2.getAttribute('data-date')
+            tooltip.text(dataDate)
+            document.querySelector('#tooltip').setAttribute('data-date', dataDate)
         })
         .on('mouseout', (item) => {
             tooltip.transition()
