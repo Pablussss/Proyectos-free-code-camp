@@ -1,126 +1,137 @@
-let url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json';
+let url =
+  "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/cyclist-data.json";
 let req = new XMLHttpRequest();
 
-let data
 let values = [];
 
-let heightScale
-let xScale
-let xAxisScale
-let yAxisScale
+let xScale;
+let yScale;
+
+let xAxis;
+let yAxis;
 
 let width = 800;
 let height = 600;
 let padding = 40;
 
-let svg = d3.select('svg')
-
-let drawCanvas = () => {
-    svg.attr('width', width)
-    svg.attr('height', height)
-}
+let svg = d3.select("svg");
+let tooltip = d3.select("#tooltip");
 
 let generateScales = () => {
-    heightScale = d3.scaleLinear()
-    // domain = coger rango de los valores
-        .domain([0,d3.max(values, (item) => {
-            return item[1];
-        })])
-        // dibujar sin sobrepasar los margenes
-        .range([0, height - (2 * padding)])
-    
-    xScale = d3.scaleLinear()
-        .domain([0, values.length - 1])
-        .range([padding, width - padding])
-    
-    // convertir formato string a fecha ("1990-11-01" => 1990/11/01)
-    let datesArray = values.map((item) => {
-        return new Date(item[0])
+  xScale = d3
+    .scaleLinear()
+    .domain([
+      d3.min(values, (item) => {
+        return item["Year"];
+      }) - 1,
+      d3.max(values, (item) => {
+        return item["Year"];
+      }) + 1
+    ])
+    .range([padding, width - padding]);
+
+  yScale = d3
+    .scaleTime()
+    .domain([
+      d3.min(values, (item) => {
+        return new Date(item["Seconds"] * 1000);
+      }),
+      d3.max(values, (item) => {
+        return new Date(item["Seconds"] * 1000);
+      })
+    ])
+    .range([padding, height - padding]);
+};
+
+let drawCanvas = () => {
+  svg.attr("width", width);
+  svg.attr("height", height);
+};
+
+let drawPoints = () => {
+  svg
+    .selectAll("circle")
+    .data(values)
+    .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("r", "5")
+    .attr("data-xvalue", (item) => {
+      return item["Year"];
     })
+    .attr("data-yvalue", (item) => {
+      return new Date(item["Seconds"] * 1000);
+    })
+    .attr("cx", (item) => {
+      return xScale(item["Year"]);
+    })
+    .attr("cy", (item) => {
+      return yScale(new Date(item["Seconds"] * 1000));
+    })
+    .attr("fill", (item) => {
+      if (item["URL"] === "") {
+        return "lightgreen";
+      } else {
+        return "orange";
+      }
+    })
+    .on("mouseover", (item) => {
+      tooltip.transition().style("visibility", "visible");
 
-    xAxisScale = d3.scaleTime()
-        .domain([d3.min(datesArray), d3.max(datesArray)])
-        .range([padding, width - padding])
+      if (item["Doping"] != "") {
+        tooltip.text(
+          item["Year"] +
+            " - " +
+            item["Name"] +
+            " - " +
+            item["Time"] +
+            " - " +
+            item["Doping"]
+        );
+      } else {
+        tooltip.text(
+          item["Year"] +
+            " - " +
+            item["Name"] +
+            " - " +
+            item["Time"] +
+            " - " +
+            "No Allegations"
+        );
+      }
 
-    yAxisScale = d3.scaleLinear()
-        .domain([0, d3.max(values, (item) => {
-            return item[1];
-        })])
-        .range([height - padding, padding])
-}
-
-let drawBars =() => {
-
-    let tooltip = d3.select('body')
-                    .append('div')
-                    .attr('id', 'tooltip')
-                    .style('visibility', 'hidden')
-                    .style('width', 'auto')
-                    .style('height', 'auto')
-
-    svg.selectAll('rect')
-        .data(values)
-        .enter()
-        .append('rect')
-        .attr('class', 'bar')
-        .attr('width', (width - (2 * padding)) / values.length)
-        .attr('data-date', (item) => {
-            return item[0]
-        })
-        .attr('data-gdp', (item) => {
-            return item[1]
-        })
-        .attr('height', (item) => {
-            return heightScale(item[1])
-        })
-        .attr('x', (item, index) => {
-            return xScale(index)
-        })
-        .attr('y', (item) => {
-            return (height - padding) - heightScale(item[1])
-        })
-
-        .on('mouseover', (item) => {
-
-            tooltip.transition()
-                .style('visibility', 'visible')
-            
-            let item2 = item.fromElement
-            let dataDate = item2.getAttribute('data-date')
-            tooltip.text(dataDate)
-            document.querySelector('#tooltip').setAttribute('data-date', dataDate)
-        })
-        .on('mouseout', (item) => {
-            tooltip.transition()
-                .style('visibility', 'hidden')
-        })     
-}
-
+      tooltip.attr("data-year", item["Year"]);
+    })
+    .on("mouseout", (item) => {
+      tooltip.transition().style("visibility", "hidden");
+    });
+};
 
 let generateAxes = () => {
+  xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d"));
 
-    let xAxis = d3.axisBottom(xAxisScale)
-    let yAxis = d3.axisLeft(yAxisScale)
+  yAxis = d3.axisLeft(yScale).tickFormat(d3.timeFormat("%M:%S"));
 
-    svg.append('g')
-        .call(xAxis)
-        .attr("id", "x-axis")
-        .attr("transform", "translate(0, " + (height - padding) + ')')
+  svg
+    .append("g")
+    .call(xAxis)
+    .attr("id", "x-axis")
+    .attr("transform", "translate(0, " + (height - padding) + ")");
 
-    svg.append('g')
-        .call(yAxis)
-        .attr("id", "y-axis")
-        .attr("transform", "translate(" + padding + ', 0)')
-}
+  svg
+    .append("g")
+    .call(yAxis)
+    .attr("id", "y-axis")
+    .attr("transform", "translate(" + padding + ", 0)");
+};
 
-req.open('GET', url, true)
+req.open("GET", url, true);
 req.onload = () => {
-    data = JSON.parse(req.responseText);
-    values = data.data;
-    console.log(values)
-    drawCanvas();
-    generateScales();
-    drawBars();
-    generateAxes();
-}
+  values = JSON.parse(req.responseText);
+  console.log(values);
+  drawCanvas();
+  generateScales();
+  drawPoints();
+  generateAxes();
+};
 req.send();
