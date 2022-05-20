@@ -15,18 +15,25 @@ mongoose.connect(process.env.MONGO_URI, {
 const { Schema } = mongoose
 
 const ExerciseSchema = new Schema({
-  userId: {type: String, required: true},
-  description: String,
-  duration: Number,
-  date: Date
+  "username": {type: String, required: true},
+  "date": Date,
+  "duration": Number,
+  "description": String,
 })
 
 const UserSchema = new Schema({
   username: String
 })
 
+const LogSchema = new Schema({
+  "username": String,
+  "count": Number,
+  "log": Array
+})
+
 const User = mongoose.model('User', UserSchema)
 const Exercise = mongoose.model('Exercise', ExerciseSchema)
+const Log = mongoose.model('Log', LogSchema)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -50,15 +57,14 @@ app.post('/api/users', (req, res) => {
 
 app.post('/api/users/:id/exercises', (req, res) => {
   const id = req.params.id;
-  const {description, duration, date} = req.body
   User.findById(id, (err, userData) => {
     if (err || !userData) {res.send("Error saving the user"), console.log(err)}
     else {
       const newExercise = new Exercise({
-        userId: id,
-        description: description,
-        duration: duration,
-        date: new Date(date).toDateString()
+        "username": userData.username,
+        "description": req.body.description,
+        "duration": req.body.duration,
+        "date": new Date(req.body.date).toDateString()
       })
       newExercise.save((err, data) => {
         if (err || !data) {res.send("Error saving exercises"), console.log(err)}
@@ -66,9 +72,9 @@ app.post('/api/users/:id/exercises', (req, res) => {
           res.json({
             _id: userData.id,
             username: userData.username,
+            "description": data.description,
+            "duration": data.duration,
             date: data.date.toDateString(),
-            duration,
-            description
           })
         }
       })
@@ -79,40 +85,69 @@ app.post('/api/users/:id/exercises', (req, res) => {
 })
 
 app.get('/api/users/:id/logs', (req, res) => {
-  const { from, to, limit } = req.query
-  const {id} = req.params
-  User.findById(id, (err, userData) => {
-    if (err || !userData) {res.send("Error getting the user"), console.log(err)}
-    else {
-      let dateObj = {}
-      if(from){
-        dateObj["$gte"] = new Date(from)
-      }
-      if (to){
-        dateObj["$lte"] = new Date(to)
-      }
-      let filter = {
-        userId: id
-      }
-      if(from || to) {
-        filter.data = dateObj
-      }
-      let nonNull = limit ?? 500
-      Exercise.find(filter).limit(+nonNull).exec((err, data) => {
-        if(err || !data) {res.send("Error getting the exercise"), console.log(err)}
-        else {
-          const count = data.length
-          const rawLog = data
-          const {username, _id} = userData
-          const log = rawLog.map(e => ({
-            description: e.description,
-            duration: e.duration,
-            date: e.date.toDateString()
-          }))
-          res.json({username, count, _id, log})
-        }
-      })
+  const {from, to, limit} = req.query;
+  let idJson = {"id": req.params.id}
+  let idToCheck = idJson.id;
+
+  // Check id
+  User.findById(idToCheck, (err, data) => {
+    var query = {
+      username: data.username
     }
+    if (from !== undefined && to === undefined) {
+      query.date = { $gte: new Date(from)}
+    } else if (to !== undefined && from === undefined) {
+      query.date = { $lte: new Date(to) }
+    } else if (from !== undefined && to !== undefined) {
+      query.date = { $gte: new Date(from), $lte: new Date(to) }
+    }
+  
+  let limitChecker = (limit) => {
+    let maxLimit = 100;
+    if (limit) {
+      return limit;
+    } else {
+      return maxLimit;
+    }
+  }
+
+  if(err) {
+    console.log("error with ID=> " + err)
+  } else {
+    Exercise.find((query), null, {limit: limitChecker(+limit)}, (err, docs) => {
+      let loggedArray = [];
+      if (err) {
+        console.log("error with query => " + err)
+      }else {
+        let documents = docs;
+        let loggedArray = documents.map((item) => {
+          return  {
+            "description": item.description,
+            "duration": item.duration,
+            "date": item.date.toDateString()
+          }
+        })
+        const test = new Log({
+          "username": data.username,
+          "count": loggedArray.length,
+          "log": loggedArray
+        })
+        
+        test.save((err, data) => {
+          if (err) {console.log("error saving data " + err)}
+          else {
+            console.log("saved log successfully")
+            res.json({
+              "_id": idToCheck,
+              "username": data.username,
+              "count": data.count,
+              "log": loggedArray
+            })
+          }  
+        })
+      }
+    })
+  }
   })
 })
 
@@ -122,7 +157,7 @@ app.get('/api/users', (req, res) => {
     else{ res.json(data) }
   })
 })
-
+ 
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
